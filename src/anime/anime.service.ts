@@ -15,7 +15,7 @@ export class AnimeService {
   }
 
   findAll() {
-    return `This action returns all anime`;
+    return this.prisma.anime.findMany();
   }
 
   findOne(id: number) {
