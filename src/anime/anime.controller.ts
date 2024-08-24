@@ -10,8 +10,8 @@ export class AnimeController {
   constructor(private readonly animeService: AnimeService) { }
 
   @Post()
-  create(@Body() createAnimeDto: CreateAnimeDto) {
-    return this.animeService.create(createAnimeDto);
+  create() {
+    return this.animeService.create();
   }
 
   @Get()
@@ -21,16 +21,16 @@ export class AnimeController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.animeService.findOne(+id);
+    return this.animeService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAnimeDto: UpdateAnimeDto) {
-    return this.animeService.update(+id, updateAnimeDto);
+    return this.animeService.update(id, updateAnimeDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.animeService.remove(+id);
+    return this.animeService.remove(id);
   }
 }

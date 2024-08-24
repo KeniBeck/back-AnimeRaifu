@@ -2,31 +2,79 @@ import { Injectable } from '@nestjs/common';
 import { CreateAnimeDto } from './dto/create-anime.dto';
 import { UpdateAnimeDto } from './dto/update-anime.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ExtractRankingAnimeService } from './services/extract-ranking-anime.service';
 
 @Injectable()
 export class AnimeService {
-  constructor(private prisma: PrismaService) { }
-  create(createAnimeDto: CreateAnimeDto) {
-    return this.prisma.anime.create({
-      data: {
-        ...createAnimeDto
+
+
+  constructor(
+    private prisma: PrismaService,
+    private extractAnime: ExtractRankingAnimeService
+  ) { }
+
+  async create() {
+    const animes = await this.extractAnime.extractRankingAnime();
+    const createdAnimes = [];
+    const duplicateAnimes = [];
+
+    for (const anime of animes) {
+      const existingAnime = await this.prisma.anime.findFirst({
+        where: {
+          title: anime.title,
+        },
+      });
+
+      if (!existingAnime) {
+        const createAnimeDto: CreateAnimeDto = {
+          title: anime.title,
+          img_url: anime.image_url,
+          banner_url: anime.banner_url,
+          Emision: anime.Emision
+        };
+        const createdAnime = await this.prisma.anime.create({
+          data: createAnimeDto,
+        });
+
+        createdAnimes.push(createdAnime);
+      } else {
+        duplicateAnimes.push(anime.title);
       }
-    });
+    }
+
+    if (duplicateAnimes.length > 0) {
+      console.log(`The following animes already exist: ${duplicateAnimes.join('\n ' + '\n')}`);
+    }
+
+    return createdAnimes;
   }
 
   findAll() {
     return this.prisma.anime.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} anime`;
+  findOne(id: string) {
+    return this.prisma.anime.findUnique({
+      where: {
+        id: id
+      }
+    });
   }
 
-  update(id: number, updateAnimeDto: UpdateAnimeDto) {
-    return `This action updates a #${id} anime`;
+  update(id: string, updateAnimeDto: UpdateAnimeDto) {
+    return this.prisma.anime.updateMany({
+      where: {
+        id: id
+      },
+      data: updateAnimeDto
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} anime`;
+  remove(id: string) {
+    return this.prisma.anime.delete({
+      where: {
+        id: id
+      }
+    });
   }
 }
