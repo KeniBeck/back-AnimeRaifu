@@ -14,10 +14,11 @@ datasource db {
 }
 
 model Anime {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  title   String
-  img_url String
-  status  String
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  title      String
+  img_url    String
+  banner_url String
+  Emision    Boolean
 }
 
 model User {
