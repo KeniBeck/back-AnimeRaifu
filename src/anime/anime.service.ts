@@ -7,6 +7,7 @@ import { ExtractRankingAnimeService } from './services/extract-ranking-anime.ser
 @Injectable()
 export class AnimeService {
 
+
   constructor(
     private prisma: PrismaService,
     private extractAnime: ExtractRankingAnimeService
