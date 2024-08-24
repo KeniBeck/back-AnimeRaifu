@@ -2,10 +2,12 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { AnimeService } from './anime.service';
 import { CreateAnimeDto } from './dto/create-anime.dto';
 import { UpdateAnimeDto } from './dto/update-anime.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('anime')
+@ApiTags('anime')
 export class AnimeController {
-  constructor(private readonly animeService: AnimeService) {}
+  constructor(private readonly animeService: AnimeService) { }
 
   @Post()
   create(@Body() createAnimeDto: CreateAnimeDto) {
