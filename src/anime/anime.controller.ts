@@ -9,7 +9,7 @@ import { ApiTags } from '@nestjs/swagger';
 export class AnimeController {
   constructor(private readonly animeService: AnimeService) { }
 
-  @Post()
+  @Post('ranking')
   create() {
     return this.animeService.create();
   }
