@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
 import { EpisodesService } from './episodes.service';
 import { CreateEpisodeDto } from './dto/create-episode.dto';
 import { UpdateEpisodeDto } from './dto/update-episode.dto';
@@ -10,8 +10,8 @@ export class EpisodesController {
   constructor(private readonly episodesService: EpisodesService) { }
 
   @Post()
-  create(@Body() createEpisodeDto: CreateEpisodeDto) {
-    return this.episodesService.create(createEpisodeDto);
+  create(@Query('url') url: string) {
+    return this.episodesService.create(url);
   }
 
   @Get()

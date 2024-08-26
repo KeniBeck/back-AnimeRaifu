@@ -1,6 +1,9 @@
 import { IsNotEmpty, IsString } from "class-validator"
 
 export class CreateEpisodeDto {
+
+
+
     /**
      * @example'https://cdn.myanimelist.net/images/anime/10/78745.jpg'
      * @description The image of the episode
