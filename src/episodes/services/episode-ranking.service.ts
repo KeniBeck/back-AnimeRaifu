@@ -48,14 +48,7 @@ export class EpisodeRankingService {
                 await newPage.close();
             }
 
-            // Mostrar el rango de episodios encontrados
-            if (allEpisodes.length > 0) {
-                const episodeNumbers = allEpisodes.map(ep => parseInt(ep.episode_number)).filter(num => !isNaN(num));
-                const minEpisode = Math.min(...episodeNumbers);
-                const maxEpisode = Math.max(...episodeNumbers);
-            } else {
-                console.log('No se encontraron episodios.');
-            }
+
         } catch (error) {
             console.error(`Error al extraer episodios: `, error);
         }

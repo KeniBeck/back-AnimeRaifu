@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UpdateEpisodeDto } from './dto/update-episode.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EpisodeRankingService } from './services/episode-ranking.service';
+import { EpisodeUrlService } from './services/episode-url.service';
 
 
 @Injectable()
@@ -9,7 +10,8 @@ export class EpisodesService {
 
   constructor(
     private episodeRanking: EpisodeRankingService,
-    private prisma: PrismaService
+    private prisma: PrismaService,
+    private epidoseUrl: EpisodeUrlService
   ) { }
 
   async create(id: string, url: string) {
@@ -49,15 +51,23 @@ export class EpisodesService {
     return this.prisma.episode.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} episode`;
+  findOne(id: string) {
+    return this.prisma.episode.findMany({
+      where: {
+        id_anime: id
+      }
+    });
   }
 
-  update(id: number, updateEpisodeDto: UpdateEpisodeDto) {
-    return `This action updates a #${id} episode`;
+  episodeUrl(id: string, url: string) {
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} episode`;
+  remove(id: string) {
+    return this.prisma.episode.deleteMany({
+      where: {
+        id: id
+      }
+    });
   }
 }
