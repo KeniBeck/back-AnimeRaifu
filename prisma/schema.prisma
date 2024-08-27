@@ -39,3 +39,9 @@ model Episode {
   number_episode String
   id_anime       String
 }
+
+model Servidor {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  servidor_url String
+  id_anime     String
+}
