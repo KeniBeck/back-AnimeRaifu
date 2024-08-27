@@ -53,7 +53,6 @@ export class EpisodeRankingService {
                 const episodeNumbers = allEpisodes.map(ep => parseInt(ep.episode_number)).filter(num => !isNaN(num));
                 const minEpisode = Math.min(...episodeNumbers);
                 const maxEpisode = Math.max(...episodeNumbers);
-                console.log(`Rango de episodios encontrados: ${minEpisode} - ${maxEpisode}`);
             } else {
                 console.log('No se encontraron episodios.');
             }

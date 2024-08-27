@@ -9,9 +9,10 @@ import { ApiTags } from '@nestjs/swagger';
 export class EpisodesController {
   constructor(private readonly episodesService: EpisodesService) { }
 
-  @Post()
-  create(@Query('url') url: string) {
-    return this.episodesService.create(url);
+  @Post(':id')
+  create(@Param('id') id: string,
+    @Query('url') url: string) {
+    return this.episodesService.create(id, url);
   }
 
   @Get()

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateEpisodeDto } from './dto/create-episode.dto';
 import { UpdateEpisodeDto } from './dto/update-episode.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EpisodeRankingService } from './services/episode-ranking.service';
@@ -13,21 +12,37 @@ export class EpisodesService {
     private prisma: PrismaService
   ) { }
 
-  async create(url: string) {
-    const episodes = await this.episodeRanking.extractRankingEpisode(url);
+  async create(id: string, url: string) {
 
+    try {
 
-    const createdEpisodes = await Promise.all(episodes.map(episode => {
-      return this.prisma.episode.create({
-        data: {
-          url_episode: episode.url_episode,
-          number_episode: episode.number_episode,
-          img_episode: episode.img_episode,
+      const existingAnime = await this.prisma.anime.findFirst({
+        where: {
+          id: id
         }
-      });
-    }));
+      })
+      const episodes = await this.episodeRanking.extractRankingEpisode(url);
 
-    return createdEpisodes;
+      const createdEpisodes = await Promise.all(episodes.map(episode => {
+        return this.prisma.episode.create({
+          data: {
+            url_episode: episode.url_episode,
+            number_episode: episode.number_episode,
+            img_episode: episode.img_episode,
+            id_anime: id
+
+          }
+        });
+      }));
+
+      return createdEpisodes;
+
+    } catch (error) {
+      return error.message;
+    }
+
+
+
   }
 
   findAll() {

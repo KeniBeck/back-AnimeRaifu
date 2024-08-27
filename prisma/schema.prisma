@@ -37,4 +37,5 @@ model Episode {
   img_episode    String
   url_episode    String
   number_episode String
+  id_anime       String
 }
