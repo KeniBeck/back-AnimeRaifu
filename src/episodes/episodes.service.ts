@@ -1,8 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { UpdateEpisodeDto } from './dto/update-episode.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EpisodeRankingService } from './services/episode-ranking.service';
-import { EpisodeUrlService } from './services/episode-url.service';
 
 
 @Injectable()
@@ -11,7 +9,6 @@ export class EpisodesService {
   constructor(
     private episodeRanking: EpisodeRankingService,
     private prisma: PrismaService,
-    private epidoseUrl: EpisodeUrlService
   ) { }
 
   async create(id: string, url: string) {
@@ -23,6 +20,11 @@ export class EpisodesService {
           id: id
         }
       })
+      if (!existingAnime) {
+        throw new NotFoundException(
+          `Anime with id ${id} not found`
+        )
+      }
       const episodes = await this.episodeRanking.extractRankingEpisode(url);
 
       const createdEpisodes = await Promise.all(episodes.map(episode => {
@@ -66,7 +68,7 @@ export class EpisodesService {
   remove(id: string) {
     return this.prisma.episode.deleteMany({
       where: {
-        id: id
+        id_anime: id
       }
     });
   }
