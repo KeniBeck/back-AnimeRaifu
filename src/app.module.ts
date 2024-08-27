@@ -7,6 +7,7 @@ import { EpisodesModule } from './episodes/episodes.module';
 
 @Module({
   imports: [AnimeModule, PrismaModule, UserModule, EpisodesModule],
+  providers: [],
 
 })
 export class AppModule { }
