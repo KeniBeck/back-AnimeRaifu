@@ -31,3 +31,11 @@ model User {
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
 }
+
+model Episode {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  img_episode    String
+  url_episode    String
+  number_episode String
+  id_anime       String
+}
