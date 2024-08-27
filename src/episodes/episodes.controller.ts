@@ -8,8 +8,8 @@ export class EpisodesController {
   constructor(private readonly episodesService: EpisodesService) { }
 
   @Post(':id')
-  create(@Param('id') id: string, @Query('url') url: string) {
-    return this.episodesService.create(id, url);
+  create(@Param('id') id: string) {
+    return this.episodesService.create(id);
   }
 
   @Get()
