@@ -1,15 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ServerService } from './server.service';
 import { CreateServerDto } from './dto/create-server.dto';
 import { UpdateServerDto } from './dto/update-server.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('server')
+@ApiTags('server')
 export class ServerController {
-  constructor(private readonly serverService: ServerService) {}
+  constructor(private readonly serverService: ServerService) { }
 
   @Post()
-  create(@Body() createServerDto: CreateServerDto) {
-    return this.serverService.create(createServerDto);
+  create(@Param('id') id: string) {
+    return this.serverService.create(id);
   }
 
   @Get()

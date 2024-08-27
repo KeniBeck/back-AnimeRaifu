@@ -11,7 +11,7 @@ export class EpisodesService {
     private prisma: PrismaService,
   ) { }
 
-  async create(id: string, url: string) {
+  async create(id: string) {
 
     try {
 
@@ -25,6 +25,8 @@ export class EpisodesService {
           `Anime with id ${id} not found`
         )
       }
+      const url = existingAnime.banner_url;
+
       const episodes = await this.episodeRanking.extractRankingEpisode(url);
 
       const createdEpisodes = await Promise.all(episodes.map(episode => {
