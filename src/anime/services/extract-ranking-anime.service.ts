@@ -44,7 +44,7 @@ export class ExtractRankingAnimeService {
 
         } catch (error) {
             console.error(error);
-            throw new Error('Failed to extract ranking anime');
+            return error.message;
         } finally {
             await browser.close();
         }

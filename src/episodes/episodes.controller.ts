@@ -1,7 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Delete, Query } from '@nestjs/common';
 import { EpisodesService } from './episodes.service';
-import { CreateEpisodeDto } from './dto/create-episode.dto';
-import { UpdateEpisodeDto } from './dto/update-episode.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('episodes')
@@ -10,9 +8,8 @@ export class EpisodesController {
   constructor(private readonly episodesService: EpisodesService) { }
 
   @Post(':id')
-  create(@Param('id') id: string,
-    @Query('url') url: string) {
-    return this.episodesService.create(id, url);
+  create(@Param('id') id: string) {
+    return this.episodesService.create(id);
   }
 
   @Get()
@@ -22,16 +19,16 @@ export class EpisodesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.episodesService.findOne(+id);
+    return this.episodesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEpisodeDto: UpdateEpisodeDto) {
-    return this.episodesService.update(+id, updateEpisodeDto);
+  update(@Param('id') id: string, @Query() url: string) {
+    return this.episodesService.episodeUrl(id, url);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.episodesService.remove(+id);
+    return this.episodesService.remove(id);
   }
 }
