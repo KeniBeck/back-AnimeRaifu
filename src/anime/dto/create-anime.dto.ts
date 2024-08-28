@@ -31,6 +31,33 @@ export class CreateAnimeDto {
      */
     @IsString()
     @IsNotEmpty()
-    readonly Emision: boolean;
+    readonly emission: string;
+
+
+    /**
+     * @example'En un mundo medieval, la joven Akame se une a un grupo de asesinos llamado Night Raid para vengar la muerte de su amigo y acabar con la corrupción del Imperio.'
+     * @description The sinopsis of the anime
+     */
+    @IsString()
+    @IsNotEmpty()
+    readonly sinopsis: string;
+
+    /**
+     * @example'2014'
+     * @description The year of the anime
+     */
+
+    @IsNotEmpty()
+    @IsString()
+    readonly year: string;
+
+    /**
+     * @example'TV'
+     * @description The type of the anime
+     */
+
+    @IsString()
+    @IsNotEmpty()
+    readonly type: string;
 
 }

@@ -5,46 +5,53 @@ import puppeteer from 'puppeteer';
 export class ExtractRankingAnimeService {
     async extractRankingAnime() {
         const browser = await puppeteer.launch({ headless: false });
-        const [page] = await browser.pages();  // Get the initial page
+        const page = await browser.newPage();  // Create a new page
 
         try {
-            await page.goto('https://jkanime.net/ranking/', { waitUntil: 'domcontentloaded' });
+            await page.goto('https://www.animefenix.tv/animes', { waitUntil: 'domcontentloaded' });
+            await page.waitForSelector('.pagination-list', { timeout: 200000 });
 
-            // Aumentar el tiempo de espera a 10 segundos
-            await page.waitForSelector('.page_mirando .anime__item', { timeout: 200000 });
-            const animes = await page.evaluate(() => {
-                const animeItems = Array.from(document.querySelectorAll('.page_mirando .anime__item'));
-                return animeItems.map(elem => {
-                    const titleElement = elem.querySelector('h5 a');
-                    const title = titleElement.textContent;
-                    const imageElement = elem.querySelector('.anime__item__pic');
-                    const computedStyle = window.getComputedStyle(imageElement);
-                    const backgroundImage = computedStyle.backgroundImage;
-
-                    // Verificar si el estilo de fondo de la imagen está presente
-                    let image_url = '';
-                    if (backgroundImage && backgroundImage !== 'none') {
-                        const imageMatch = backgroundImage.match(/url\(["']?(.*?)["']?\)/);
-                        image_url = imageMatch ? imageMatch[1] : '';
-                    }
-
-                    const Emision = title.includes('En emision');
-                    let banner_url = titleElement.getAttribute('href');
-
-                    // Prepend 'https://jkanime.net' to the URL if it's not already there
-                    if (!banner_url.startsWith('https://jkanime.net')) {
-                        banner_url = `https://jkanime.net${banner_url}`;
-                    }
-
-                    return { title, image_url, Emision, banner_url };
-                });
+            const totalPages = await page.evaluate(() => {
+                const paginationLinks = Array.from(document.querySelectorAll('.pagination-list .pagination-link'));
+                const lastPageLink = paginationLinks[paginationLinks.length - 2];
+                return parseInt(lastPageLink.textContent);
             });
 
-            return animes;
+            const allAnimes = [];
+
+            for (let i = 1; i <= totalPages; i++) {
+                await page.goto(`https://www.animefenix.tv/animes?page=${i}`, { waitUntil: 'domcontentloaded' });
+
+                await page.waitForSelector('.list-series .serie-card', { timeout: 200000 });
+                const animes = await page.evaluate(() => {
+                    const animeItems = Array.from(document.querySelectorAll('.list-series .serie-card'));
+                    return animeItems.map(elem => {
+                        const sinopsis = elem.querySelector('.serie-card__information p').textContent;
+                        const titleElement = elem.querySelector('.title h3 a');
+                        const title = titleElement.textContent;
+                        const banner_url = titleElement.getAttribute('href');
+                        const imageElement = elem.querySelector('figure.image img');
+                        const image_url = imageElement.getAttribute('src');
+                        const yearElement = elem.querySelector('figure.image .tag.year');
+                        const year = yearElement ? yearElement.textContent : '';
+                        const typeElement = elem.querySelector('figure.image .tag.type');
+                        const type = typeElement ? typeElement.textContent : '';
+                        const emissionElement = elem.querySelector('figure.image .tag.airing')
+                        const emission = emissionElement ? emissionElement.textContent : '';
+
+                        return { title, sinopsis, banner_url, image_url, year, type, emission };
+                    });
+                });
+
+                allAnimes.push(...animes);
+            }
+
+            return allAnimes;
 
         } catch (error) {
             console.error(error);
             return error.message;
+
         } finally {
             await browser.close();
         }

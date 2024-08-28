@@ -3,6 +3,14 @@ import { IsNotEmpty, IsString } from "class-validator"
 export class CreateEpisodeDto {
 
 
+    /**
+     * @example'Hunter x Hunter'
+     * @description The title of the anime
+     */
+    @IsString()
+    @IsNotEmpty()
+    readonly title_anime: string
+
 
     /**
      * @example'https://cdn.myanimelist.net/images/anime/10/78745.jpg'
