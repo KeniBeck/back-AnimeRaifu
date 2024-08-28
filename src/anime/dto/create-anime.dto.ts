@@ -31,7 +31,7 @@ export class CreateAnimeDto {
      */
     @IsString()
     @IsNotEmpty()
-    readonly emission: boolean;
+    readonly emission: string;
 
 
     /**

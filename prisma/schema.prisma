@@ -14,11 +14,11 @@ datasource db {
 }
 
 model Anime {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
   title      String
   img_url    String
   banner_url String
-  emission   Boolean
+  emission   String
   sinopsis   String
   year       String
   type       String
@@ -37,10 +37,10 @@ model User {
 
 model Episode {
   id             String @id @default(auto()) @map("_id") @db.ObjectId
-  img_episode    String
   url_episode    String
   number_episode String
   id_anime       String
+  title_anime    String
 }
 
 model Servidor {

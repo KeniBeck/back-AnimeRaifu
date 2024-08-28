@@ -37,7 +37,7 @@ export class ExtractRankingAnimeService {
                         const typeElement = elem.querySelector('figure.image .tag.type');
                         const type = typeElement ? typeElement.textContent : '';
                         const emissionElement = elem.querySelector('figure.image .tag.airing')
-                        const emission = emissionElement ? true : false;
+                        const emission = emissionElement ? emissionElement.textContent : '';
 
                         return { title, sinopsis, banner_url, image_url, year, type, emission };
                     });
