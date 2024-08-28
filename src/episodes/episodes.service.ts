@@ -34,8 +34,8 @@ export class EpisodesService {
           data: {
             url_episode: episode.url_episode,
             number_episode: episode.number_episode,
-            img_episode: episode.img_episode,
-            id_anime: id
+            id_anime: id,
+            title_anime: existingAnime.title
 
           }
         });
