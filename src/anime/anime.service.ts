@@ -10,13 +10,13 @@ export class AnimeService {
 
   constructor(
     private prisma: PrismaService,
-    private extractAnime: ExtractRankingAnimeService
+    private extractAnime: ExtractRankingAnimeService,
   ) { }
 
   async create() {
-    const animes = await this.extractAnime.extractRankingAnime();
     const createdAnimes = [];
     const duplicateAnimes = [];
+    const animes = await this.extractAnime.extractRankingAnime();
 
     for (const anime of animes) {
       const existingAnime = await this.prisma.anime.findFirst({
@@ -30,7 +30,11 @@ export class AnimeService {
           title: anime.title,
           img_url: anime.image_url,
           banner_url: anime.banner_url,
-          Emision: anime.Emision
+          emission: anime.emission,
+          sinopsis: anime.sinopsis,
+          year: anime.year,
+          type: anime.type,
+
         };
         const createdAnime = await this.prisma.anime.create({
           data: createAnimeDto,
@@ -47,10 +51,13 @@ export class AnimeService {
     }
 
     return createdAnimes;
+
   }
 
   findAll() {
-    return this.prisma.anime.findMany();
+    return this.prisma.anime.findMany({
+      take: 2000
+    });
   }
 
   findOne(id: string) {
