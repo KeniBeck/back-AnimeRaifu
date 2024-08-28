@@ -18,7 +18,10 @@ model Anime {
   title      String
   img_url    String
   banner_url String
-  Emision    Boolean
+  emission   Boolean
+  sinopsis   String
+  year       String
+  type       String
 }
 
 model User {
