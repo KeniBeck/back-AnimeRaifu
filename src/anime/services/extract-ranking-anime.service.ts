@@ -9,12 +9,12 @@ export class ExtractRankingAnimeService {
 
         try {
             await page.goto('https://www.animefenix.tv/animes', { waitUntil: 'domcontentloaded' });
-            await page.waitForSelector('.pagination-list', { timeout: 200000 });
+            await page.waitForSelector('.flex.justify-center.mt-8 nav', { timeout: 200000 });
 
             const totalPages = await page.evaluate(() => {
-                const paginationLinks = Array.from(document.querySelectorAll('.pagination-list .pagination-link'));
+                const paginationLinks = Array.from(document.querySelectorAll('.flex.justify-center.mt-8 nav a'));
                 const lastPageLink = paginationLinks[paginationLinks.length - 2];
-                return parseInt(lastPageLink.textContent);
+                return parseInt(lastPageLink.textContent.trim());
             });
 
             const allAnimes = [];
@@ -22,24 +22,21 @@ export class ExtractRankingAnimeService {
             for (let i = 1; i <= totalPages; i++) {
                 await page.goto(`https://www.animefenix.tv/animes?page=${i}`, { waitUntil: 'domcontentloaded' });
 
-                await page.waitForSelector('.list-series .serie-card', { timeout: 200000 });
+                await page.waitForSelector('.grid.grid-cols-2.sm\\:grid-cols-3.md\\:grid-cols-4.lg\\:grid-cols-5.gap-4 a', { timeout: 200000 });
                 const animes = await page.evaluate(() => {
-                    const animeItems = Array.from(document.querySelectorAll('.list-series .serie-card'));
+                    const animeItems = Array.from(document.querySelectorAll('.grid.grid-cols-2.sm\\:grid-cols-3.md\\:grid-cols-4.lg\\:grid-cols-5.gap-4 a'));
                     return animeItems.map(elem => {
-                        const sinopsis = elem.querySelector('.serie-card__information p').textContent;
-                        const titleElement = elem.querySelector('.title h3 a');
-                        const title = titleElement.textContent;
-                        const banner_url = titleElement.getAttribute('href');
-                        const imageElement = elem.querySelector('figure.image img');
+                        const titleElement = elem.querySelector('h3');
+                        const title = titleElement.textContent.trim();
+                        const banner_url = elem.getAttribute('href');
+                        const imageElement = elem.querySelector('img');
                         const image_url = imageElement.getAttribute('src');
-                        const yearElement = elem.querySelector('figure.image .tag.year');
-                        const year = yearElement ? yearElement.textContent : '';
-                        const typeElement = elem.querySelector('figure.image .tag.type');
-                        const type = typeElement ? typeElement.textContent : '';
-                        const emissionElement = elem.querySelector('figure.image .tag.airing')
-                        const emission = emissionElement ? emissionElement.textContent : '';
+                        const yearElement = elem.querySelector('.bg-primary');
+                        const year = yearElement ? yearElement.textContent.trim() : '';
+                        const statusElement = elem.querySelector('.bg-zinc-700');
+                        const status = statusElement ? statusElement.textContent.trim() : '';
 
-                        return { title, sinopsis, banner_url, image_url, year, type, emission };
+                        return { title, banner_url, image_url, year, status };
                     });
                 });
 

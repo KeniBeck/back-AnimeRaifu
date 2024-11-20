@@ -30,7 +30,7 @@ export class AnimeService {
           title: anime.title,
           img_url: anime.image_url,
           banner_url: anime.banner_url,
-          emission: anime.emission,
+          emission: anime.status,
           sinopsis: anime.sinopsis,
           year: anime.year,
           type: anime.type,

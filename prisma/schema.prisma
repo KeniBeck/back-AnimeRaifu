@@ -19,9 +19,9 @@ model Anime {
   img_url    String
   banner_url String
   emission   String
-  sinopsis   String
+  sinopsis   String?
   year       String
-  type       String
+  type       String?
 }
 
 model User {
